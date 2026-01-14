@@ -75,7 +75,7 @@ frontend-toolset/
 Create a new project instantly:
 
 ```bash
-npx @wisnuvb/frontend-toolkit my-app
+npx @calmsey/frontend-toolkit my-app
 cd my-app
 npm run dev
 ```
