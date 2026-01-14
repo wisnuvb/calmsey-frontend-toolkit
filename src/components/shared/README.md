@@ -1,18 +1,54 @@
 # Shared Components
 
-Place globally reusable components here.
+Global reusable components used across the application.
 
-## Examples
+## Components
 
-- `Navbar.tsx` - Site navigation
-- `Footer.tsx` - Site footer
-- `Sidebar.tsx` - Sidebar navigation
-- `Modal.tsx` - Reusable modal component
-- `ErrorBoundary.tsx` - Error boundary wrapper
-- `LoadingSpinner.tsx` - Loading indicator
+### Layout Components
 
-## Guidelines
+- **DashboardLayout** - Main layout wrapper for dashboard pages with Navbar and Sidebar
+- **Navbar** - Top navigation bar with user menu
+- **Sidebar** - Side navigation menu for dashboard
 
-- Components here should be generic and reusable across the app
-- Avoid business logic - keep them presentational
-- Use TypeScript for props interface
+### Utility Components
+
+- **LoadingSpinner** - Loading indicator with configurable sizes
+- **LoadingPage** - Full-page loading state
+- **ErrorMessage** - Error display with optional retry button
+- **ErrorPage** - Full-page error state
+
+## Usage
+
+```typescript
+// Layout
+import { DashboardLayout } from '@/components/shared/DashboardLayout';
+
+export default function Page() {
+  return (
+    <DashboardLayout>
+      <h1>Dashboard Content</h1>
+    </DashboardLayout>
+  );
+}
+
+// Loading
+import { LoadingSpinner, LoadingPage } from '@/components/shared/LoadingSpinner';
+
+<LoadingSpinner size="lg" text="Loading data..." />
+
+// Error
+import { ErrorMessage } from '@/components/shared/ErrorMessage';
+
+<ErrorMessage 
+  title="Failed to load"
+  message={error.message}
+  onRetry={() => refetch()}
+/>
+```
+
+## Component Structure
+
+- All components are client components (`'use client'`)
+- Use Tailwind CSS for styling
+- Import from `lucide-react` for icons
+- Follow Shadcn UI design patterns

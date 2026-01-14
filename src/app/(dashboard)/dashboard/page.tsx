@@ -1,8 +1,13 @@
 'use client';
 
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { DashboardLayout } from '@/components/shared/DashboardLayout';
+import { LoadingPage } from '@/components/shared/LoadingSpinner';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { LayoutDashboard, Users, FileText, Settings } from 'lucide-react';
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
@@ -15,71 +20,146 @@ export default function DashboardPage() {
   }, [status, router]);
 
   if (status === 'loading') {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p>Loading...</p>
-      </div>
-    );
+    return <LoadingPage />;
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 justify-between">
-            <div className="flex">
-              <div className="flex flex-shrink-0 items-center">
-                <h1 className="text-xl font-bold">Dashboard</h1>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <span className="mr-4 text-sm text-gray-700">
-                {session?.user?.email}
-              </span>
-              <button
-                onClick={() => signOut()}
-                className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
-              >
-                Sign out
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+  const stats = [
+    {
+      title: 'Total Users',
+      value: '2,543',
+      change: '+12%',
+      icon: Users,
+      trend: 'up',
+    },
+    {
+      title: 'Active Sessions',
+      value: '842',
+      change: '+8%',
+      icon: LayoutDashboard,
+      trend: 'up',
+    },
+    {
+      title: 'Documents',
+      value: '1,234',
+      change: '-3%',
+      icon: FileText,
+      trend: 'down',
+    },
+    {
+      title: 'Settings',
+      value: '12',
+      change: '0%',
+      icon: Settings,
+      trend: 'neutral',
+    },
+  ];
 
-      <main className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="rounded-lg border-4 border-dashed border-gray-200 p-8">
-            <h2 className="text-2xl font-bold mb-4">Welcome to Dashboard</h2>
-            <p className="text-gray-600">
-              This is a protected route. You need to be authenticated to view this page.
-            </p>
-            
-            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="rounded-lg border bg-white p-6">
-                <h3 className="font-semibold mb-2">API Integration</h3>
-                <p className="text-sm text-gray-600">
-                  Use Orval to generate API hooks from your OpenAPI spec
+  const features = [
+    {
+      title: 'API Integration',
+      description: 'Use Orval to generate API hooks from your OpenAPI spec',
+      badge: 'Auto-generated',
+    },
+    {
+      title: 'TanStack Query',
+      description: 'Powerful data fetching and caching with React Query',
+      badge: 'Optimized',
+    },
+    {
+      title: 'Shadcn UI',
+      description: 'Beautiful and accessible UI components',
+      badge: 'Ready',
+    },
+  ];
+
+  return (
+    <DashboardLayout>
+      <div className="space-y-6">
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-muted-foreground">
+            Welcome back, {session?.user?.email}
+          </p>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {stats.map((stat) => (
+            <Card key={stat.title}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {stat.title}
+                </CardTitle>
+                <stat.icon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <p className="text-xs text-muted-foreground">
+                  <span
+                    className={
+                      stat.trend === 'up'
+                        ? 'text-green-600'
+                        : stat.trend === 'down'
+                        ? 'text-red-600'
+                        : 'text-gray-600'
+                    }
+                  >
+                    {stat.change}
+                  </span>{' '}
+                  from last month
                 </p>
-              </div>
-              
-              <div className="rounded-lg border bg-white p-6">
-                <h3 className="font-semibold mb-2">TanStack Query</h3>
-                <p className="text-sm text-gray-600">
-                  Powerful data fetching and caching with React Query
-                </p>
-              </div>
-              
-              <div className="rounded-lg border bg-white p-6">
-                <h3 className="font-semibold mb-2">Shadcn UI</h3>
-                <p className="text-sm text-gray-600">
-                  Beautiful and accessible UI components
-                </p>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Features Grid */}
+        <div>
+          <h2 className="text-2xl font-bold mb-4">Features</h2>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature) => (
+              <Card key={feature.title}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>{feature.title}</CardTitle>
+                    <Badge>{feature.badge}</Badge>
+                  </div>
+                  <CardDescription>{feature.description}</CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
           </div>
         </div>
-      </main>
-    </div>
+
+        {/* Quick Actions */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Start</CardTitle>
+            <CardDescription>
+              Get started with your next feature
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <p className="text-sm">
+                ✅ <strong>Step 1:</strong> Configure your OpenAPI spec in{' '}
+                <code className="rounded bg-muted px-1 py-0.5">orval.config.js</code>
+              </p>
+              <p className="text-sm">
+                ✅ <strong>Step 2:</strong> Run{' '}
+                <code className="rounded bg-muted px-1 py-0.5">npm run generate:api</code>
+              </p>
+              <p className="text-sm">
+                ✅ <strong>Step 3:</strong> Use generated hooks in your components
+              </p>
+              <p className="text-sm">
+                📚 Check the documentation for more details
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </DashboardLayout>
   );
 }

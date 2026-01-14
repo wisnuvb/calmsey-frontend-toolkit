@@ -1,7 +1,31 @@
 {
-  "name": "frontend-toolset",
-  "version": "1.0.0",
-  "description": "Next.js Frontend Toolset with Orval, TanStack Query, NextAuth, and Shadcn UI",
+  "name": "@calmsey/frontend-toolkit",
+  "version": "0.0.1",
+  "description": "A modern Next.js frontend boilerplate with automatic API code generation, authentication, and UI components",
+  "bin": {
+    "create-frontend-toolkit": "./bin/create-app.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "public",
+    "components.json",
+    "next.config.mjs",
+    "tailwind.config.ts",
+    "tsconfig.json",
+    "postcss.config.js",
+    "orval.config.js",
+    "openapi.json",
+    ".eslintrc.json",
+    ".prettierrc",
+    "README.md",
+    "GETTING_STARTED.md",
+    "API_ARCHITECTURE.md",
+    "PROJECT_STRUCTURE.md",
+    "CHEATSHEET.md",
+    "ENV_TEMPLATE.md",
+    "LICENSE"
+  ],
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -9,20 +33,48 @@
     "lint": "next lint",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
-    "generate:api": "orval --config orval.config.js"
+    "generate:api": "orval --config orval.config.js",
+    "prepublishOnly": "node -e \"require('fs').chmodSync('bin/create-app.js', '755')\""
   },
   "keywords": [
     "nextjs",
+    "next.js",
     "typescript",
     "react-query",
+    "tanstack-query",
     "nextauth",
     "orval",
-    "shadcn"
+    "shadcn",
+    "shadcn-ui",
+    "tailwindcss",
+    "boilerplate",
+    "template",
+    "scaffold",
+    "starter",
+    "frontend",
+    "fullstack"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Calmsey (Wisnu Saputro)",
+    "email": "wisnuvb@gmail.com",
+    "url": "https://calmsey.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wisnuvb/calmsey-frontend-toolkit.git"
+  },
+  "homepage": "https://github.com/wisnuvb/calmsey-frontend-toolkit#readme",
+  "bugs": {
+    "url": "https://github.com/wisnuvb/calmsey-frontend-toolkit/issues"
+  },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-label": "^2.1.1",
+    "@radix-ui/react-select": "^2.1.2",
+    "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-toast": "^1.2.2",
     "@tanstack/react-query": "^5.90.17",
     "@tanstack/react-query-devtools": "^5.91.2",
     "axios": "^1.13.2",
@@ -34,6 +86,7 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-hook-form": "^7.71.1",
+    "sonner": "^1.7.0",
     "tailwind-merge": "^3.4.0",
     "zod": "^4.3.5"
   },

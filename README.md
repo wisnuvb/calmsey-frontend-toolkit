@@ -2,6 +2,15 @@
 
 A modern Next.js frontend boilerplate with automatic API code generation, authentication, and UI components.
 
+## 🎯 Use Cases
+
+This project supports **two scenarios** for API usage:
+
+1. **Fullstack** - Using Next.js API Routes (integrated backend)
+2. **External API** - Consuming API from a separate backend (microservices, REST API, etc.)
+
+See [API_ARCHITECTURE.md](./API_ARCHITECTURE.md) for a complete guide.
+
 ## 🚀 Features
 
 - **Next.js 15** - App Router with Server Components
@@ -59,51 +68,69 @@ frontend-toolset/
 └── tsconfig.json          # TypeScript configuration
 ```
 
-## 🛠️ Setup
+## 🛠️ Quick Start
 
-### Prerequisites
+### Option 1: Install via npx (Recommended)
 
-- Node.js 18+ 
-- npm/yarn/pnpm
+Create a new project instantly:
 
-### Installation
+```bash
+npx @wisnuvb/frontend-toolkit my-app
+cd my-app
+npm run dev
+```
+
+### Option 2: Clone from Repository
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd frontend-toolset
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Create environment file:
+
 ```bash
-cp .env.example .env
+# Copy ENV_TEMPLATE.md content to .env.local
+# Or generate NEXTAUTH_SECRET:
+openssl rand -base64 32
 ```
 
-4. Update environment variables:
+4. Update environment variables in `.env.local`:
+
 ```env
 NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-super-secret-key
+NEXTAUTH_SECRET=your-generated-secret-key
 NEXT_PUBLIC_API_URL=http://localhost:3000/api
 ```
 
 5. Configure Orval:
    - Update `orval.config.js` with your OpenAPI/Swagger spec URL
    - Run API generation:
+
 ```bash
 npm run generate:api
 ```
 
 6. Start development server:
+
 ```bash
 npm run dev
 ```
 
 Visit [http://localhost:3000](http://localhost:3000)
+
+### Prerequisites
+
+- Node.js 18+
+- npm/yarn/pnpm
 
 ## 📝 Usage
 
@@ -112,6 +139,7 @@ Visit [http://localhost:3000](http://localhost:3000)
 Orval automatically generates TypeScript types and React Query hooks from your OpenAPI spec.
 
 1. **Configure OpenAPI source** in `orval.config.js`:
+
 ```javascript
 input: {
   target: 'https://api.example.com/swagger.json', // Your API spec
@@ -119,20 +147,22 @@ input: {
 ```
 
 2. **Generate API client**:
+
 ```bash
 npm run generate:api
 ```
 
 3. **Use generated hooks**:
+
 ```typescript
 import { useGetUsers } from '@/services/api/endpoints/users';
 
 function UsersList() {
   const { data, isLoading, error } = useGetUsers();
-  
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading users</div>;
-  
+
   return (
     <ul>
       {data?.map(user => (
@@ -148,6 +178,7 @@ function UsersList() {
 The project uses NextAuth.js with JWT strategy.
 
 **Login example**:
+
 ```typescript
 import { signIn } from 'next-auth/react';
 
@@ -160,6 +191,7 @@ const handleLogin = async () => {
 ```
 
 **Protected routes**:
+
 ```typescript
 'use client';
 import { useSession } from 'next-auth/react';
@@ -167,11 +199,11 @@ import { redirect } from 'next/navigation';
 
 export default function ProtectedPage() {
   const { data: session, status } = useSession();
-  
+
   if (status === 'unauthenticated') {
     redirect('/login');
   }
-  
+
   return <div>Protected content</div>;
 }
 ```
@@ -179,6 +211,7 @@ export default function ProtectedPage() {
 ### Using Shadcn UI Components
 
 Install components as needed:
+
 ```bash
 npx shadcn@latest add button
 npx shadcn@latest add card
@@ -186,6 +219,7 @@ npx shadcn@latest add input
 ```
 
 Use in your components:
+
 ```typescript
 import { Button } from '@/components/ui/button';
 
@@ -212,19 +246,19 @@ function LoginForm() {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
-  
+
   const onSubmit = (data: FormData) => {
     console.log(data);
   };
-  
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <input {...register('email')} />
       {errors.email && <span>{errors.email.message}</span>}
-      
+
       <input type="password" {...register('password')} />
       {errors.password && <span>{errors.password.message}</span>}
-      
+
       <button type="submit">Login</button>
     </form>
   );
@@ -236,6 +270,7 @@ function LoginForm() {
 ### Axios Interceptors
 
 The Axios instance in `src/lib/axios.ts` automatically:
+
 - Adds Bearer token from NextAuth session
 - Handles 401 Unauthorized responses
 - Can be extended for other interceptors
@@ -243,6 +278,7 @@ The Axios instance in `src/lib/axios.ts` automatically:
 ### React Query Settings
 
 Configured in `src/lib/query-client.ts`:
+
 - Default stale time: 1 minute
 - Retry failed requests: 1 time
 - No refetch on window focus
@@ -250,6 +286,7 @@ Configured in `src/lib/query-client.ts`:
 ### API Base URL
 
 Set in environment variables:
+
 ```env
 NEXT_PUBLIC_API_URL=https://api.example.com
 ```
@@ -277,6 +314,7 @@ Modify CSS variables in `src/app/globals.css` to change theme colors.
 For endpoints not covered by Orval:
 
 1. Create a service in `src/services/custom/`:
+
 ```typescript
 // src/services/custom/my-service.ts
 import { axiosInstance } from '@/lib/axios';
@@ -290,6 +328,7 @@ export const myCustomApi = {
 ```
 
 2. Create a React Query hook:
+
 ```typescript
 // src/hooks/useCustomData.ts
 import { useQuery } from '@tanstack/react-query';
